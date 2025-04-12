@@ -13,20 +13,27 @@ const Login = () => {
     setError('');
 
     try {
-      // Usa HTTPS y variable de entorno para la URL base
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://18.222.162.217';
+      // Opción 1: Usar HTTPS (recomendado)
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://18.222.162.217';
+      
+      // Opción 2: Si necesitas HTTP temporalmente (solo desarrollo)
+      // const apiUrl = process.env.REACT_APP_API_URL || 'http://18.222.162.217';
+      // if (window.location.protocol === 'https:' && apiUrl.startsWith('http:')) {
+      //   throw new Error('No se permiten conexiones HTTP desde HTTPS');
+      // }
+
       const response = await fetch(`${apiUrl}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include' // Opcional: para manejar cookies
+        credentials: 'include'
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.msg || 'Error en la autenticación');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || errorData.msg || 'Error en la autenticación');
       }
 
       const data = await response.json();
@@ -39,7 +46,9 @@ const Login = () => {
       window.location.href = '/dashboard';
 
     } catch (err) {
-      setError(err.message || 'Error de conexión con el servidor');
+      setError(err.message === 'Failed to fetch' 
+        ? 'Error de conexión con el servidor. Verifica tu conexión a internet.' 
+        : err.message || 'Error desconocido');
       console.error('Login error:', err);
     } finally {
       setLoading(false);
