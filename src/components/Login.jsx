@@ -14,13 +14,13 @@ const Login = () => {
 
     try {
       // Opción 1: Usar HTTPS (recomendado)
-      const apiUrl = process.env.REACT_APP_API_URL || 'https://18.222.162.217';
+      //const apiUrl = process.env.REACT_APP_API_URL || 'https://18.222.162.217';
       
       // Opción 2: Si necesitas HTTP temporalmente (solo desarrollo)
-      // const apiUrl = process.env.REACT_APP_API_URL || 'http://18.222.162.217';
-      // if (window.location.protocol === 'https:' && apiUrl.startsWith('http:')) {
-      //   throw new Error('No se permiten conexiones HTTP desde HTTPS');
-      // }
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://18.222.162.217';
+      if (window.location.protocol === 'https:' && apiUrl.startsWith('http:')) {
+      throw new Error('No se permiten conexiones HTTP desde HTTPS');
+      }
 
       const response = await fetch(`${apiUrl}/user/login`, {
         method: 'POST',
