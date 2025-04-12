@@ -13,7 +13,7 @@ import React, { useState } from 'react';
      setError('');
  
      try {
-       const response = await fetch('https://127.0.0.1:5000/user/login', {
+       const response = await fetch('https://18.222.162.217/user/login', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
