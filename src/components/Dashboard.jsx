@@ -23,7 +23,7 @@ const Dashboard = () => {
         setUserData(user);
 
         // Obtener lista de usuarios
-        const response = await fetch('http://18.222.162.217/user/', {
+        const response = await fetch('https://18.222.162.217/user/', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -46,7 +46,7 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este usuario?')) {
       try {
-        const response = await fetch(`http://18.222.162.217/user/${id}`, {
+        const response = await fetch(`https://18.222.162.217/user/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`

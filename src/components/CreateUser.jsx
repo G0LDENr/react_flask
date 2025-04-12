@@ -25,7 +25,7 @@ const CreateUser = () => {
 
     try {
       // 1. Intentar crear el usuario
-      await fetch('http://18.222.162.217/user/add_user', {
+      await fetch('https://18.222.162.217/user/add_user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
