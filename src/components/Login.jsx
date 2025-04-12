@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../css/login.css'; // Asegúrate que la ruta sea correcta
+import '../css/login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,25 +13,34 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('http://18.222.162.217/user/login', {
+      // Usa HTTPS y variable de entorno para la URL base
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://18.222.162.217/user/login';
+      const response = await fetch(`${apiUrl}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
+        credentials: 'include' // Opcional: para manejar cookies
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem('token', data.access_token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        window.location.href = '/dashboard';
-      } else {
-        setError(data.msg || 'Credenciales incorrectas');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.msg || 'Error en la autenticación');
       }
+
+      const data = await response.json();
+      
+      // Almacenamiento seguro (considera usar HttpOnly cookies en producción)
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      
+      // Redirección segura
+      window.location.href = '/dashboard';
+
     } catch (err) {
-      setError('Error de conexión con el servidor');
+      setError(err.message || 'Error de conexión con el servidor');
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
@@ -50,6 +59,7 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="username"
           />
         </div>
         <div className="login-form-group">
@@ -60,15 +70,19 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="current-password"
           />
         </div>
-        <br />
         <button 
           type="submit" 
           className="login-button"
           disabled={loading}
         >
-          {loading ? 'Cargando...' : 'Ingresar'}
+          {loading ? (
+            <>
+              <span className="spinner"></span> Cargando...
+            </>
+          ) : 'Ingresar'}
         </button>
       </form>
     </div>
