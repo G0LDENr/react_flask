@@ -14,7 +14,7 @@ const Login = () => {
 
     try {
       // Usa HTTPS y variable de entorno para la URL base
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://18.222.162.217/user/login';
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://18.222.162.217';
       const response = await fetch(`${apiUrl}/user/login`, {
         method: 'POST',
         headers: {
